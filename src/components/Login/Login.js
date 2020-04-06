@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import classes from './Login.module.css';
 import girl_listening_music from '../../assets/girl.png';
+import api from '../../services/api'
+
+const port = process.env.PORT || 8888
 
 class Login extends Component {
     render() {
@@ -17,7 +20,7 @@ class Login extends Component {
                         key and speed.
                 </p>
                     <button className={classes.Button}>
-                        <a className={classes.Link} href='http://localhost:8888/login'>ENTER</a>
+                        <a className={classes.Link} href={`${api}/login`}>ENTER</a>
                     </button>
                 </div>
                 <div className={classes.Girl}>
