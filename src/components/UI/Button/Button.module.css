@@ -1,0 +1,80 @@
+.Button  {
+    background-color: transparent;
+    border: 1px solid #262626;
+    outline: none;
+    cursor: pointer;
+    font-size: .75rem;
+    font-weight: bold;
+    border-radius: 20px;  
+    width: 124px;
+    height: 37px;
+    margin-right: 12px;
+    display: block;
+    text-decoration: none;
+    padding-bottom: 10px;
+    transition: .2s;
+}
+
+.Button_selected  {
+    background-color: #262626;
+    color: '#D9DCD9';
+    border: 1px solid #262626;
+    outline: none;
+    cursor: pointer;
+    font-size: .75rem;
+    font-weight: bold;
+    border-radius: 20px;  
+    width: 124px;
+    height: 37px;
+    margin-right: 12px;
+    display: block;
+    text-decoration: none;
+    padding-bottom: 10px;
+    transition: .2s;
+}
+
+.Button_guitar::before {
+    content: '';
+    display: inline-block;    
+    width: 21px;
+    height: 21px;
+    margin-right: 6px;
+    top: 5px;
+    position: relative;    
+    background-image: url('../../../assets/guitar.svg');
+}
+
+.Button_note::before {
+    content: '';
+    display: inline-block;    
+    width: 21px;
+    height: 21px;
+    margin-right: 6px;
+    top: 5px;
+    position: relative;    
+    background-image: url('../../../assets/note.svg');
+}
+
+.Button_guitar_hover::before {
+    content: '';
+    display: inline-block;    
+    width: 21px; 
+    height: 21px;
+    margin-right: 6px;
+    top: 5px;
+    position: relative;
+    background-image: url('../../../assets/guitar-white.svg');    
+    filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%); 
+}
+
+.Button_note_hover::before {
+    content: '';
+    display: inline-block;    
+    width: 21px;
+    height: 21px;
+    margin-right: 6px;
+    top: 5px;
+    position: relative;
+    background-image: url('../../../assets/note-white.svg');
+    filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(87deg) brightness(119%) contrast(119%);
+}

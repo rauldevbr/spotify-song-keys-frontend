@@ -1,0 +1,29 @@
+.link_container {
+    align-self: center;        
+}
+
+.link {
+    color: #D9DCD9; 
+}
+
+.link:hover {
+    color: #191A19; 
+}
+
+.icon {
+    align-self: center;
+    margin-left: 5%;
+}
+
+.arrow_icon {    
+    width: 20px;
+    height: 20px;
+}
+
+/* CONTENT */
+.content {
+    cursor: pointer;
+    font-size: 12px;    
+    text-transform: uppercase;     
+}
+
