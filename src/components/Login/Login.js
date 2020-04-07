@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import classes from './Login.module.css';
 import girl_listening_music from '../../assets/girl.png';
-import api from '../../services/api'
 
-const port = process.env.PORT || 8888
-
-class Login extends Component {
+class Login extends Component {    
     render() {
         return (
             <div className={classes.Container}>
@@ -20,7 +17,8 @@ class Login extends Component {
                         key and speed.
                 </p>
                     <button className={classes.Button}>
-                        <a className={classes.Link} href={`${api}/login`}>ENTER</a>
+                        <a className={classes.Link}
+                           href={`${process.env.REACT_APP_API_URL}/login`}>ENTER</a>
                     </button>
                 </div>
                 <div className={classes.Girl}>
