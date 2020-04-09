@@ -12,12 +12,12 @@ class App extends Component {
     super();
     const params = this.getHashParams();
 
-    this.token = localStorage.getItem('token_ls') ? localStorage.getItem('token_ls') : params.access_token;
+    this.token = params.access_token;
     this.loggedIn = this.token ? true : false;
   }
 
   getHashParams = function () {
-    var hashParams = {};
+    var hashParams = {}; 
     var e, r = /([^&;=]+)=?([^&;]*)/g,
       q = window.location.hash.substring(1);
     while (e = r.exec(q)) {

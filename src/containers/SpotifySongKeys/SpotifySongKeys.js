@@ -20,7 +20,6 @@ class SpotifySongKeys extends Component {
             favArtists: [],
             favGenres: [],
             loggedIn: this.props.loggedIn,
-            token: this.props.token,
             user: {
                 userName: '',
                 profileImgUrl: ''
@@ -33,90 +32,87 @@ class SpotifySongKeys extends Component {
     }
 
     setAccessToken = () => {
-        if (!spotifyAPI.getAccessToken()) {
-            if (this.state.token) {
-                spotifyAPI.setAccessToken(this.state.token)
-            } else if(localStorage.getItem('token_ls')){
-                spotifyAPI.setAccessToken(localStorage.getItem('token_ls'))
-            } else {
-                console.log('No token to SET');
-            }
-        };
+        if (this.props.token) {
+            spotifyAPI.setAccessToken(this.props.token)
+        } else {
+            spotifyAPI.setAccessToken(sessionStorage.getItem('token_ls'))
+        }
     }
 
-    getArtists = () => {
+    componentDidMount = () => {
+        if (this.props.token) {
+            sessionStorage.setItem('token_ls', this.props.token);
+        }
+    }
+
+    getArtists = async () => {
         this.setAccessToken();
 
-        spotifyAPI.getMyTopArtists({ limit: 6 }).then(response => {
-            const favArtists = [];
+        const topArt = await spotifyAPI.getMyTopArtists({ limit: 6 })
+        const favArtists = [];
 
-            const topArtists = Object.values(response.items)
-            topArtists.map(topArtist => (
-                //Get Artist URL
-                spotifyAPI.getArtist(topArtist.id).then(res => {
-                    axios.get(res.href).then(artist => {
+        const topArtists = Object.values(topArt.items)
+        topArtists.map(async (topArtist) => {
+            //Get Artist URL
+            const res = await spotifyAPI.getArtist(topArtist.id)
+            axios.get(res.href).then(artist => {
 
-                        //Get Top Tracks
-                        let topTracks = []
+                //Get Top Tracks
+                let topTracks = []
 
-                        spotifyAPI.getArtistTopTracks(artist.data.id, 'BR').then(track => {
-                            for (let i in track.tracks) {
+                spotifyAPI.getArtistTopTracks(artist.data.id, 'BR').then(track => {
+                    for (let i in track.tracks) {
 
-                                //Get Track Info
-                                let trackInfo = {};
+                        //Get Track Info
+                        let trackInfo = {};
 
-                                trackInfo.album_img = track.tracks[i].album.images[0].url;
+                        trackInfo.album_img = track.tracks[i].album.images[0].url;
 
-                                spotifyAPI.getAudioFeaturesForTrack(track.tracks[i].id).then(response => {
-                                    trackInfo.id = response.id;
-                                    trackInfo.duration_ms = response.duration_ms;
-                                    trackInfo.key = response.key;
-                                    trackInfo.mode = response.mode;
-                                    trackInfo.tempo = response.tempo;
-                                    trackInfo.time_signature = response.time_signature;
-                                    trackInfo.acousticness = response.acousticness;
-                                    trackInfo.danceability = response.danceability;
-                                    trackInfo.energy = response.energy;
-                                    trackInfo.instrumentalness = response.instrumentalness;
-                                    trackInfo.liveness = response.liveness;
-                                    trackInfo.loudness = response.loudness;
-                                    trackInfo.speechiness = response.speechiness;
-                                    trackInfo.valence = response.valence;
-                                }).catch(error => {
-                                    console.log('Error while getting audio features from track: ' + error);
-                                });
+                        spotifyAPI.getAudioFeaturesForTrack(track.tracks[i].id).then(response => {
+                            trackInfo.id = response.id;
+                            trackInfo.duration_ms = response.duration_ms;
+                            trackInfo.key = response.key;
+                            trackInfo.mode = response.mode;
+                            trackInfo.tempo = response.tempo;
+                            trackInfo.time_signature = response.time_signature;
+                            trackInfo.acousticness = response.acousticness;
+                            trackInfo.danceability = response.danceability;
+                            trackInfo.energy = response.energy;
+                            trackInfo.instrumentalness = response.instrumentalness;
+                            trackInfo.liveness = response.liveness;
+                            trackInfo.loudness = response.loudness;
+                            trackInfo.speechiness = response.speechiness;
+                            trackInfo.valence = response.valence;
+                        }).catch(error => {
+                            console.log('Error while getting audio features from track: ' + error);
+                        });
 
-                                topTracks.push(
-                                    {
-                                        id: track.tracks[i].id,
-                                        name: track.tracks[i].name,
-                                        trackInfo
-                                    }
-                                )
+                        topTracks.push(
+                            {
+                                id: track.tracks[i].id,
+                                name: track.tracks[i].name,
+                                trackInfo
                             }
-                        })
-
-                        favArtists.push({
-                            id: artist.data.id,
-                            name: artist.data.name,
-                            url: artist.data.external_urls.spotify,
-                            followers: artist.data.followers.total,
-                            image: artist.data.images[0].url,
-                            topTracks
-                        })
-                    }).catch(error => {
-                        console.log("Error on request artist to get artist link: ", error);
-                    })
-                }).catch(error => {
-                    console.log("Error on request artist to Spotify API: ", error);
+                        )
+                    }
                 })
-                //End of Get Artist URL                    
-            ));
 
-            this.setState({ ...this.state, favArtists });
-        }).catch(error => {
-            console.log("Error on request to Spotify API: ", error);
-        })
+                favArtists.push({
+                    id: artist.data.id,
+                    name: artist.data.name,
+                    url: artist.data.external_urls.spotify,
+                    followers: artist.data.followers.total,
+                    image: artist.data.images[0].url,
+                    topTracks
+                })
+            }).catch(error => {
+                console.log("Error on request artist to get artist link: ", error);
+            })
+            //End of Get Artist URL                    
+        });
+
+        this.setState({ ...this.state, favArtists });
+
     }
 
     getGenres = () => {
@@ -208,10 +204,6 @@ class SpotifySongKeys extends Component {
             }).catch(error => {
                 console.log("Error while getting device", error);
             });
-    }
-
-    componentDidMount() {        
-        localStorage.setItem('token_ls', this.state.token);        
     }
 
     render() {

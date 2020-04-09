@@ -17,7 +17,6 @@ const header = (props) => {
             </section>
         </header>
     )
-
 };
 
 export default header;
